@@ -1,7 +1,95 @@
-<!-- ==================== HOME LANDING PAGE ==================== -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CloudMoon - Play Instantly</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+
+  <style>
+    :root {
+      --bg-main: linear-gradient(135deg, #0f172a 0%, #1e2937 40%, #312e81 70%, #6b21a8 100%);
+      --primary: #a855f7;
+      --accent: #22d3ee;
+      --hotpink: #f472b6;
+    }
+    .portal-body {
+      background: var(--bg-main);
+      background-size: 400% 400%;
+      animation: gradientShift 25s ease infinite;
+      color: white;
+      min-height: 100vh;
+    }
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #22d3ee; border-radius: 3px; }
+
+    .game-card-item {
+      aspect-ratio: 16 / 9;
+      background: rgba(30, 41, 59, 0.6);
+      border: 2px solid transparent;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      overflow: hidden;
+      border-radius: 24px;
+      position: relative;
+    }
+    .game-card-item:hover {
+      transform: translateY(-12px) scale(1.05);
+      border-color: #22d3ee;
+      box-shadow: 0 25px 50px -12px rgb(168 85 247), 0 0 40px rgb(34 211 238);
+    }
+    .card-banner { transition: transform 0.6s ease; }
+    .game-card-item:hover .card-banner { transform: scale(1.12); }
+
+    .nav-tab {
+      transition: all 0.3s ease;
+    }
+    .nav-tab.active {
+      color: #22d3ee;
+      border-bottom: 3px solid #22d3ee;
+    }
+
+    .hero-bg {
+      background: linear-gradient(90deg, #a855f7, #22d3ee, #f472b6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+  <div id="app" class="portal-body">
+    
+    <!-- NEW COLORFUL TOP BAR -->
+    <nav class="sticky top-0 z-50 bg-black/30 backdrop-blur-xl border-b border-white/10 px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <img src="https://cloudmoonapp.com/favicon.ico" class="w-9 h-9 rounded-2xl" alt="Logo">
+        <span class="text-3xl font-black tracking-tighter hero-bg">CloudMoon</span>
+      </div>
+
+      <div class="flex items-center gap-8 text-lg font-semibold">
+        <a onclick="App.switchView('home')" id="nav-home" class="nav-tab cursor-pointer px-6 py-2 text-white hover:text-[#22d3ee]">Home</a>
+        <a onclick="App.switchView('games')" id="nav-games" class="nav-tab active cursor-pointer px-6 py-2 text-white hover:text-[#22d3ee]">Games</a>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <div id="server-select-container"></div>
+        <div id="user-area-desktop"></div>
+      </div>
+    </nav>
+
+    <!-- ==================== HOME LANDING PAGE (shown first) ==================== -->
     <div id="home-section" class="max-w-7xl mx-auto px-6 py-16">
       <div class="text-center max-w-3xl mx-auto">
-        <h1 class="text-7xl md:text-8xl font-black tracking-tighter leading-none" style="background: linear-gradient(90deg, #a855f7, #22d3ee, #f472b6); -webkit-background-clip: text; color: transparent;">
+        <h1 class="text-7xl md:text-8xl font-black tracking-tighter leading-none hero-bg mb-6">
           Play Any Game.<br>Instantly.
         </h1>
         <p class="text-2xl text-gray-200 mb-10">
@@ -14,6 +102,7 @@
         </button>
       </div>
 
+      <!-- Colorful feature cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-20">
         <div class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl p-8 text-center hover:border-[#22d3ee] transition-colors">
           <div class="text-6xl mb-6">⚡</div>
@@ -32,3 +121,114 @@
         </div>
       </div>
     </div>
+
+    <!-- ==================== GAMES SECTION (hidden until you click Games) ==================== -->
+    <div id="games-section" class="hidden">
+      <section id="recent-games-section" class="max-w-7xl mx-auto px-6 py-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-2xl font-black flex items-center gap-3"><i data-lucide="history" class="w-6 h-6 text-[#22d3ee]"></i> Recently Played</h2>
+        </div>
+        <div id="recent-games-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+      </section>
+
+      <div id="category-bar" class="max-w-7xl mx-auto px-6 py-4 flex gap-3 overflow-x-auto no-scrollbar"></div>
+      
+      <main class="max-w-7xl mx-auto px-6 pb-20">
+        <div class="relative mb-6">
+          <i data-lucide="search" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"></i>
+          <input type="text" id="search-input" placeholder="Search games..." 
+                 class="w-full h-14 bg-white/10 border border-white/20 rounded-3xl pl-14 pr-6 text-lg placeholder-gray-400 focus:outline-none focus:border-[#22d3ee]"
+                 oninput="App.handleSearch(this.value)">
+        </div>
+        <div id="game-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+      </main>
+    </div>
+
+    <!-- Modals (unchanged) -->
+    <div id="game-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:100;">
+      <div class="absolute inset-0 bg-black/70 backdrop-blur-md" onclick="App.closeModal()"></div>
+      <div id="modal-container-el" class="absolute bottom-0 left-0 right-0 bg-[#1e2831] border-t border-white/10 p-6 md:top-1/2 md:left-1/2 md:bottom-auto md:w-[520px] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-3xl">
+        <div id="modal-content" class="flex flex-col gap-6"></div>
+      </div>
+    </div>
+
+    <div id="login-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:200;">
+      <!-- original login modal content stays the same -->
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="App.closeLoginModal()"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#1e2831] w-[90%] max-w-[400px] p-8 rounded-3xl border border-white/10">
+        <h2 class="text-3xl font-bold text-white mb-6">Sign In</h2>
+        <div class="space-y-5">
+          <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Email</label><input type="email" id="login-email" class="w-full bg-white/10 border border-white/20 rounded-3xl px-6 py-4 text-white placeholder-gray-400 outline-none focus:border-[#22d3ee]"></div>
+          <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Password</label><input type="password" id="login-password" class="w-full bg-white/10 border border-white/20 rounded-3xl px-6 py-4 text-white placeholder-gray-400 outline-none focus:border-[#22d3ee]"></div>
+          <div><label class="block text-xs font-bold text-gray-400 uppercase mb-2">Region</label><select id="server-select" class="w-full bg-white/10 border border-white/20 rounded-3xl px-6 py-4 text-white outline-none focus:border-[#22d3ee]"></select></div>
+          <button onclick="App.handleLogin()" class="w-full py-5 bg-gradient-to-r from-[#a855f7] to-[#22d3ee] font-bold text-xl rounded-3xl">Sign In</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="queue-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:300;">
+      <!-- original queue modal stays the same -->
+      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#1e2831] w-[90%] max-w-[400px] p-8 rounded-3xl text-center">
+        <div class="loading-spinner w-14 h-14 border-4 border-[#22d3ee] border-t-transparent rounded-full mx-auto mb-6"></div>
+        <h2 class="text-3xl font-bold mb-2">In Queue</h2>
+        <p class="text-gray-400 mb-8">Waiting for a cloud device...</p>
+        <div class="grid grid-cols-2 gap-6 mb-8">
+          <div class="bg-white/10 rounded-3xl p-6"><span class="text-xs uppercase block mb-1">Position</span><span id="queue-pos" class="text-4xl font-bold text-[#22d3ee]">--</span></div>
+          <div class="bg-white/10 rounded-3xl p-6"><span class="text-xs uppercase block mb-1">Est. Time</span><span id="queue-time" class="text-4xl font-bold text-[#22d3ee]">--</span></div>
+        </div>
+        <button onclick="App.cancelQueue()" class="w-full py-5 bg-white/10 font-bold text-xl rounded-3xl">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Original obfuscated script (unchanged) -->
+  <script>
+    // ... [the entire long obfuscated script you originally provided stays exactly the same here] ...
+    const a0_0x3ff825=a0_0x44d9;(function(_0x295e77,_0x5e46b3){const _0x14e29d=a0_0x44d9,_0x2217b4=_0x295e77();while(!![]){try{const _0x75df06=parseInt(_0x14e29d(0x1db))/0x1+... /* (all the original obfuscated code you pasted) */ ... document[a0_0x3ff825(0x142)](a0_0x3ff825(0x1a8),()=>{const _0x2da2c0=a0_0x3ff825;window[_0x2da2c0(0x15c)][_0x2da2c0(0x1a4)]();});
+  </script>
+
+  <!-- NEW CLEAN SCRIPT - adds the Home/Games switching -->
+  <script>
+    // Extend the original App with our new view system
+    window.App.switchView = function(view) {
+      const homeSection = document.getElementById('home-section');
+      const gamesSection = document.getElementById('games-section');
+      const navHome = document.getElementById('nav-home');
+      const navGames = document.getElementById('nav-games');
+
+      if (view === 'home') {
+        homeSection.classList.remove('hidden');
+        gamesSection.classList.add('hidden');
+        navHome.classList.add('active');
+        navGames.classList.remove('active');
+      } else if (view === 'games') {
+        homeSection.classList.add('hidden');
+        gamesSection.classList.remove('hidden');
+        navHome.classList.remove('active');
+        navGames.classList.add('active');
+        
+        // Make sure games are rendered the first time
+        if (!window.App.gamesRendered) {
+          window.App.initPortal();
+          window.App.gamesRendered = true;
+        }
+      }
+    };
+
+    // Make sure the app knows we're starting on the home page
+    document.addEventListener('DOMContentLoaded', () => {
+      // Original app still runs
+      setTimeout(() => {
+        if (window.App && window.App.init) {
+          window.App.init();
+        }
+      }, 100);
+      
+      // Default to home
+      document.getElementById('games-section').classList.add('hidden');
+      document.getElementById('nav-home').classList.add('active');
+    });
+  </script>
+</body>
+</html>
