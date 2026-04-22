@@ -68,7 +68,93 @@
 </head>
 <body oncontextmenu="return false;">
   <div id="app">
+  <!-- 1. PASTE THIS CSS IN YOUR <head> SECTION (or in your CSS file) -->
+<style>
+  .top-bar {
+    background-color: #222;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .top-bar .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .top-bar .menu {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .top-bar a,
+  .top-bar button {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: all 0.3s;
+  }
+
+  .top-bar a:hover {
+    background-color: #444;
+  }
+
+  .games-btn {
+    background-color: #ff9800;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .games-btn:hover {
+    background-color: #f57c00;
+    transform: scale(1.05);
+  }
+</style>
+
+<!-- 2. PASTE THIS HTML ANYWHERE IN YOUR <body> (preferably right at the top) -->
+<div class="top-bar">
+  <div class="logo">learning v4</div>
+  
+  <div class="menu">
+    <!-- Add your other links here if you want -->
+    <!-- <a href="#">Home</a> -->
+    <!-- <a href="#">About</a> -->
     
+    <!-- GAMES BUTTON -->
+    <button onclick="goToGames()" class="games-btn">
+      🎮 Games
+    </button>
+  </div>
+</div>
+
+<!-- 3. PASTE THIS JAVASCRIPT BEFORE THE CLOSING </body> TAG -->
+<script>
+  function goToGames() {
+    // Change this to whatever you want the button to do:
+    // Option A: Go to a games page
+    window.location.href = "games.html";   // ← change "games.html" to your actual page
+
+    // Option B: Open a modal or show games list (example)
+    // alert("🎮 Games section coming soon!");
+    
+    // Option C: Open in new tab
+    // window.open("https://example.com/games", "_blank");
+  }
+</script>  
     <div class="portal-body min-h-screen">
       <nav class="sticky top-0 z-50 bg-[#1e2831] border-b border-white/5 px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
         <div class="flex items-center justify-between w-full md:w-auto gap-4">
